@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
 		curl \
 		libedit2 \
 		libsqlite3-0 \
+		libmysqlclient-dev \
 		libxml2 \
 		xz-utils \
 	--no-install-recommends && rm -r /var/lib/apt/lists/*
@@ -97,8 +98,8 @@ RUN set -xe \
 		--enable-ftp \
 # --enable-mbstring is included here because otherwise there's no way to get pecl to use it properly (see https://github.com/docker-library/php/issues/195)
 		--enable-mbstring \
-# --enable-mysqlnd is included here because it's harder to compile after the fact than extensions are (since it's a plugin for several extensions, not an extension in itself)
-		--enable-mysqlnd \
+# this is used to enable mysqli without enabling mysqlnd driver. Needed for compatibility with the LIVE environment.
+		--with-mysqli=/usr/bin/mysql_config --with-pdo-mysql=/usr/bin/mysql_config \
 		\
 		--with-curl \
 		--with-libedit \
